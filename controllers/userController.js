@@ -124,6 +124,15 @@ export const updateUser = async (req, res) => {
       });
     }
 
+    const { name, email, phone, address } = req.body;
+    if (!name || !email || !phone || !address) {
+      console.log("All fields are required...!");
+      return res.status(400).json({
+        Status: "failed",
+        message: "All fields should be filled...!",
+      });
+    }
+
     const updatedUser = await UserModel.findByIdAndUpdate(
       { _id: id },
       req.body,
