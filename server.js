@@ -4,7 +4,8 @@ import cors from "cors";
 import morgan from "morgan";
 import connectDB from "./config/connectDB.js";
 import colsor from "colors";
-import userRoute from "./routes/userRoute.js"
+import userRoute from "./routes/userRoute.js";
+import userAuthRoute from "./routes/userAuthRoute.js";
 
 // Config the dot env file
 dotenv.config();
@@ -21,8 +22,8 @@ app.use(express.json());
 app.use(cors());
 
 // API end point
+app.use("/api/v1/user-auth", userAuthRoute);
 app.use("/api/v1/users", userRoute);
-
 
 // PORT
 const PORT = process.env.PORT || 8080;

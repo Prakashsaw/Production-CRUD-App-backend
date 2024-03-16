@@ -2,8 +2,8 @@ import validator from "validator";
 import UserModel from "../models/userModel.js";
 
 export const createUser = async (req, res) => {
+  // console.log(req.body);
   const { name, email, phone, address } = req.body;
-
   try {
     if (!name || !email || !phone || !address) {
       console.log("All fields are required...!");
@@ -14,7 +14,10 @@ export const createUser = async (req, res) => {
     }
 
     // Check that that user with this email already exist or not
-    const user = await UserModel.findOne({ email: email });
+    const user = await UserModel.findOne({
+      userId: req.user._id,
+      email: email,
+    });
     if (user) {
       return res.status(400).json({
         status: "failed",
@@ -38,6 +41,7 @@ export const createUser = async (req, res) => {
     }
 
     const newUser = new UserModel({
+      userId: req.user._id,
       name: name,
       email: email,
       phone: phone,
@@ -65,13 +69,7 @@ export const createUser = async (req, res) => {
 
 export const getAllUser = async (req, res) => {
   try {
-    const allUsers = await UserModel.find({});
-    if (!allUsers) {
-      return res.status(400).json({
-        Status: "failed",
-        message: "User not found...!",
-      });
-    }
+    const allUsers = await UserModel.find({ userId: req.user._id });
 
     res.status(200).json({
       Status: "Success",
@@ -142,7 +140,7 @@ export const updateUser = async (req, res) => {
     res.status(200).json({
       Status: "Success",
       message: "User detail updated successfully ...!",
-      user : updatedUser,
+      user: updatedUser,
     });
   } catch (error) {
     console.log(error);

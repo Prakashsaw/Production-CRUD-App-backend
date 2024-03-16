@@ -6,13 +6,17 @@ import {
   getOneUser,
   updateUser,
 } from "../controllers/userController.js";
+import checkUserAuth from "../middlewares/userAuth.js";
 
 // Router Object
 const router = express.Router();
 
-// Routers
+// Middlewares: calling checkUserAuth middleware for all routes to check user authentication
+router.use(checkUserAuth);
+
+// Routes
 router.route("/create").post(createUser);
-router.route("/get-all-users").get(getAllUser);
+router.route("/get-all-users").post(getAllUser);
 router.route("/get-one-user/:id").get(getOneUser);
 router.route("/update/:id").put(updateUser);
 router.route("/delete/:id").delete(deleteUser);
