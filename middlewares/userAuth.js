@@ -4,8 +4,6 @@ import User from "../models/User.js";
 const checkUserAuth = async (req, res, next) => {
   let token;
   const { authorization } = req.headers;
-  console.log("req.headers:", req.headers);
-  console.log("authorization:", authorization);
   try {
     if (authorization && authorization.startsWith("Bearer")) {
       //   get the token from the header
