@@ -8,6 +8,7 @@ import {
   EmailVerificationThroughOTPEmail,
   ForgotPasswordEmail,
   ResetPasswordSuccessEmail,
+  UserRegistrationEmail,
 } from "../services/EmailTemplates.js";
 import transporter from "../config/emailConfig.js";
 import UserEmailVerificationModel from "../models/UserEmailVerification.js";
@@ -144,6 +145,16 @@ export const register = async (req, res) => {
     // Create a new user
     const user = new User({ name, email, phone, password: hashedPassword });
     await user.save();
+
+    const info = await transporter.sendMail({
+      from: {
+        name: "User Management App",
+        address: process.env.EMAIL_FROM,
+      },
+      to: user.email,
+      subject: "User Management App: Registration Successfull.",
+      html: UserRegistrationEmail(user, process.env.EMAIL_FROM),
+    });
 
     res.status(200).json({
       Status: "Success",
