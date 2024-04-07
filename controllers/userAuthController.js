@@ -12,6 +12,7 @@ import {
 } from "../services/EmailTemplates.js";
 import transporter from "../config/emailConfig.js";
 import UserEmailVerificationModel from "../models/UserEmailVerification.js";
+import cloudinary from "../config/cloudinaryConfig.js";
 
 export const SendOTPForEmailVerification = async (req, res) => {
   try {
@@ -142,8 +143,18 @@ export const register = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // Now create URL for user pic from cloudinary
+    const upload = await cloudinary.uploader.upload(req.file.path);
+
+    // console.log("Image url: ", upload.secure_url);
     // Create a new user
-    const user = new User({ name, email, phone, password: hashedPassword });
+    const user = new User({
+      name,
+      email,
+      phone,
+      password: hashedPassword,
+      image: upload.secure_url,
+    });
     await user.save();
 
     const info = await transporter.sendMail({

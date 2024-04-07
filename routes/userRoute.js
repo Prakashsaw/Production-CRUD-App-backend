@@ -7,6 +7,7 @@ import {
   updateUser,
 } from "../controllers/userController.js";
 import checkUserAuth from "../middlewares/userAuth.js";
+import upload from "../config/multerUploadConfig.js";
 
 // Router Object
 const router = express.Router();
@@ -15,7 +16,7 @@ const router = express.Router();
 router.use(checkUserAuth);
 
 // Routes
-router.route("/create").post(createUser);
+router.route("/create").post(upload.single("picture"), createUser);
 router.route("/get-all-users").post(getAllUser);
 router.route("/get-one-user/:id").get(getOneUser);
 router.route("/update/:id").put(updateUser);

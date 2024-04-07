@@ -1,5 +1,6 @@
 import express from "express";
 import { ResetPassword, SendForgotPasswordEmail, SendOTPForEmailVerification, VerifyEmailThroughOTP, login, loginInitiate, register } from "../controllers/userAuthController.js";
+import upload from "../config/multerUploadConfig.js";
 
 // Router Object
 const router = express.Router();
@@ -11,7 +12,7 @@ router.route("/send-otp-for-email-verification").post(SendOTPForEmailVerificatio
 router.route("/verify-email-through-otp/:id").post(VerifyEmailThroughOTP);
 
 // These routes for login and register
-router.route("/register").post(register);
+router.route("/register").post(upload.single("picture"), register);
 router.route("/login-initiate").post(loginInitiate);
 router.route("/login").post(login);
 

@@ -1,5 +1,6 @@
 import validator from "validator";
 import UserModel from "../models/userModel.js";
+import cloudinary from "../config/cloudinaryConfig.js";
 
 export const createUser = async (req, res) => {
   // console.log(req.body);
@@ -40,12 +41,16 @@ export const createUser = async (req, res) => {
       });
     }
 
+    // Now create URL for user pic from cloudinary
+    const upload = await cloudinary.uploader.upload(req.file.path);
+
     const newUser = new UserModel({
       userId: req.user._id,
       name: name,
       email: email,
       phone: phone,
       address: address,
+      image: upload.secure_url,
     });
 
     // Save into database
